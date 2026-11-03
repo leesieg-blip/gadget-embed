@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Jira 가젯 임베드 뷰어" />
+  <title>Jira 가젯 임베드 뷰어</title>
+</head>
+<body style="margin:0;background:#fff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif">
+  <div id="root">
+    <div id="embed-loading" style="padding:24px;color:#626f86;font-size:13px">가젯 불러오는 중...</div>
+  </div>
+  <script>
+    (async () => {
+      const params = new URLSearchParams(window.location.search);
+      const apiBase = (params.get('api') || 'http://localhost:5175').replace(/\/$/, '');
+      window.__WEB_LIVE__ = true;
+      window.__API_BASE__ = apiBase;
+      try {
+        const res = await fetch(apiBase + '/embed-bundle.json');
+        const data = await res.json();
+        if (!data.ok) throw new Error(data.error || '번들을 불러오지 못했습니다.');
+        const style = document.createElement('style');
+        style.textContent = data.css;
+        document.head.appendChild(style);
+        const script = document.createElement('script');
+        script.type = 'module';
+        script.textContent = data.js;
+        document.body.appendChild(script);
+      } catch (err) {
+        const el = document.getElementById('embed-loading');
+        if (el) {
+          el.innerHTML = '로컬 가젯 서버(<code>' + apiBase + '</code>)에 연결할 수 없습니다. PC에서 웹 서버가 실행 중인지 확인해 주세요.';
+        }
+      }
+    })();
+  </script>
+</body>
+</html>
