@@ -4,16 +4,17 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="Jira 가젯 임베드 뷰어" />
-  <title>Jira 가젯 임베드 뷰어</title>
+  <meta property="og:title" content="Jira 가젯 뷰어" />
+  <title>Jira 가젯 뷰어</title>
 </head>
-<body style="margin:0;background:#fff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif">
+<body style="margin:0;background:#f7f8f9;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif">
   <div id="root">
-    <div id="embed-loading" style="padding:24px;color:#626f86;font-size:13px">가젯 불러오는 중...</div>
+    <div id="embed-loading" style="padding:24px;color:#172b4d;font-size:13px">가젯 불러오는 중...</div>
   </div>
   <script>
     (async () => {
-      const params = new URLSearchParams(window.location.search);
+      const qs = window.location.search || '';
+      const params = new URLSearchParams(qs);
       const apiBase = (params.get('api') || 'http://localhost:5175').replace(/\/$/, '');
       window.__WEB_LIVE__ = true;
       window.__API_BASE__ = apiBase;
@@ -31,7 +32,18 @@
       } catch (err) {
         const el = document.getElementById('embed-loading');
         if (el) {
-          el.innerHTML = '로컬 가젯 서버(<code>' + apiBase + '</code>)에 연결할 수 없습니다. PC에서 웹 서버가 실행 중인지 확인해 주세요.';
+          const localUrl = 'http://localhost:5175/' + qs;
+          const lanUrl = 'http://10.10.64.253:5175/' + qs;
+          el.innerHTML =
+            '<div style="background:#fff;border:1px solid #dfe1e6;border-radius:8px;padding:20px;max-width:560px">' +
+            '<div style="font-weight:600;font-size:15px;margin-bottom:8px">MAX 필터 대시보드 가젯</div>' +
+            '<div style="color:#44546f;line-height:1.5;margin-bottom:16px">' +
+            '브라우저의 <b>로컬 네트워크 액세스(Local Network Access)</b> 보안 정책으로 인해 노션 iframe 내부에서는 로컬 서버(<code>localhost:5175</code>) 직접 호출이 차단됩니다.<br/>아래 버튼을 누르면 실시간 Jira 가젯 화면이 새 탭에서 바로 열립니다.' +
+            '</div>' +
+            '<div style="display:flex;gap:8px;flex-wrap:wrap">' +
+            '<a href="' + localUrl + '" target="_blank" rel="noopener" style="background:#0c66e4;color:#fff;text-decoration:none;padding:8px 14px;border-radius:4px;font-weight:500">내 PC에서 가젯 열기 (localhost)</a>' +
+            '<a href="' + lanUrl + '" target="_blank" rel="noopener" style="background:#091e420f;color:#172b4d;text-decoration:none;padding:8px 14px;border-radius:4px;font-weight:500">사내망 주소로 열기 (10.10.64.253)</a>' +
+            '</div></div>';
         }
       }
     })();
