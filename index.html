@@ -1,52 +1,13 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="Jira 가젯 뷰어" />
-  <title>Jira 가젯 뷰어</title>
-</head>
-<body style="margin:0;background:#f7f8f9;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif">
-  <div id="root">
-    <div id="embed-loading" style="padding:24px;color:#172b4d;font-size:13px">가젯 불러오는 중...</div>
-  </div>
-  <script>
-    (async () => {
-      const qs = window.location.search || '';
-      const params = new URLSearchParams(qs);
-      const apiBase = (params.get('api') || 'http://localhost:5175').replace(/\/$/, '');
-      window.__WEB_LIVE__ = true;
-      window.__API_BASE__ = apiBase;
-      try {
-        const res = await fetch(apiBase + '/embed-bundle.json');
-        const data = await res.json();
-        if (!data.ok) throw new Error(data.error || '번들을 불러오지 못했습니다.');
-        const style = document.createElement('style');
-        style.textContent = data.css;
-        document.head.appendChild(style);
-        const script = document.createElement('script');
-        script.type = 'module';
-        script.textContent = data.js;
-        document.body.appendChild(script);
-      } catch (err) {
-        const el = document.getElementById('embed-loading');
-        if (el) {
-          const localUrl = 'http://localhost:5175/' + qs;
-          const lanUrl = 'http://10.10.64.253:5175/' + qs;
-          el.innerHTML =
-            '<div style="background:#fff;border:1px solid #dfe1e6;border-radius:8px;padding:20px;max-width:560px">' +
-            '<div style="font-weight:600;font-size:15px;margin-bottom:8px">MAX 필터 대시보드 가젯</div>' +
-            '<div style="color:#44546f;line-height:1.5;margin-bottom:16px">' +
-            '브라우저의 <b>로컬 네트워크 액세스(Local Network Access)</b> 보안 정책으로 인해 노션 iframe 내부에서는 로컬 서버(<code>localhost:5175</code>) 직접 호출이 차단됩니다.<br/>아래 버튼을 누르면 실시간 Jira 가젯 화면이 새 탭에서 바로 열립니다.' +
-            '</div>' +
-            '<div style="display:flex;gap:8px;flex-wrap:wrap">' +
-            '<a href="' + localUrl + '" target="_blank" rel="noopener" style="background:#0c66e4;color:#fff;text-decoration:none;padding:8px 14px;border-radius:4px;font-weight:500">내 PC에서 가젯 열기 (localhost)</a>' +
-            '<a href="' + lanUrl + '" target="_blank" rel="noopener" style="background:#091e420f;color:#172b4d;text-decoration:none;padding:8px 14px;border-radius:4px;font-weight:500">사내망 주소로 열기 (10.10.64.253)</a>' +
-            '</div></div>';
-        }
-      }
-    })();
-  </script>
-</body>
+  <head><meta property="og:type" content="website" /><meta property="og:title" content="MAX 필터 대시보드" /><script>window.__WEB_LIVE__ = true; window.__PUBLIC_URL__ = "https://leesieg-blip.github.io/gadget-embed";</script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>필터 대시보드</title>
+    <script type="module" crossorigin src="./assets/index-CVjOdA_B.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-BSC5grbZ.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
 </html>
